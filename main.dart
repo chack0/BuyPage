@@ -92,14 +92,12 @@ class _MyHomePageState extends State<MyHomePage> {
       currentLiveGst = gold916GstPrice;
       textEnabled = true;
 
-      costCalculator();
-
-      print("costText valuwwwwwww = $costText");
-      // quantityCalculator();
+     
     });
+    costCalculator();
   }
 
-  void button999() {
+  void button999(context) {
     setState(() {
       button999Colour = Colors.blue;
       textColour999 = Colors.white;
@@ -113,11 +111,8 @@ class _MyHomePageState extends State<MyHomePage> {
       currenrLivePrice = gold999LivePrice;
       currentLiveGst = gold999GstPrice;
       textEnabled = true;
-
-      costCalculator();
-      print("costText valuwwwwwww = $costText");
-      // quantityCalculator();
     });
+    costCalculator();
   }
 
   void buttonSilver() {
@@ -135,48 +130,51 @@ class _MyHomePageState extends State<MyHomePage> {
       currentLiveGst = silverGstPrice;
       textEnabled = true;
 
-      costCalculator();
-      print("costText valuwwwwwww = $costText");
-      // quantityCalculator();
     });
+    costCalculator();
   }
 
   void costCalculator() {
     setState(() {
-      print("myController2.text inte value anu ithu = $myController2.text");
-      // if (myController.text == "0.0" ||
-      //     myController.text == "" ||
-      //     myController.text == "0") {
-      //    cost = 0;
-      //    costBoxValue = 0.0;
-      // }
+      if (myController2.text == "0" ||
+          myController2.text == "" ||
+          myController2.text == "0.0") {
+        costText = "0.0";
+      }
+      if (myController.text == "0" ||
+          myController.text == "" ||
+          myController.text == "0.0") {
+        qtyBoxValue = 10;
+      } else {
+        cost = qtyBoxValue * currentLiveGst;
+        costRoundOff = double.parse(cost.toStringAsFixed(2));
+        costText = costRoundOff.toString();
 
-      // if (myController2.text == "0.0" ||
-      //     myController2.text == "" ||
-      //     myController2.text == "0") {
-
-      // //  qtyBoxValue =0;
-      // }
-
-      cost = qtyBoxValue * currentLiveGst;
-      costRoundOff = double.parse(cost.toStringAsFixed(2));
-      costText = costRoundOff.toString();
-      myController2.text = costText;
+        myController2.text = costText;
+      }
     });
   }
 
   void quantityCalculator() {
     setState(() {
       // quantity = 0;
+      if (myController.text == "0" ||
+          myController.text == "" ||
+          myController.text == "0.0") {
+        costText = "0.0";
+        qtyText = "0.00";
+      }
+      if (myController2.text == "0" ||
+          myController2.text == "" ||
+          myController2.text == "0.0") {
+        costBoxValue = 0;
+      }
       quantity = costBoxValue / currentLiveGst;
       qtyRoundOff = double.parse(quantity.toStringAsFixed(2));
       qtyText = qtyRoundOff.toString();
       myController.text = qtyText;
 
       costText = myController2.text;
-
-      print(
-          "THIS ISSSS THE LIVE VALUE FROM costRoundOff on quantityCalculator = $costRoundOff");
     });
   }
 
@@ -339,6 +337,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     alert = DateTime.now().add(Duration(minutes: 5));
+    WidgetsBinding.instance.addPostFrameCallback((_) => button999(context));
   }
 
   @override
@@ -435,7 +434,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(5))),
                               onPressed: () {
-                                button999();
+                                button999(context);
                               },
                               elevation: 3,
                               color: button999Colour,
@@ -571,7 +570,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         children: <Widget>[
                                           Padding(
                                               padding: const EdgeInsets.only(
-                                                  right: 7,bottom: 5),
+                                                  right: 7, bottom: 5),
                                               child: Container(
                                                 width: 15,
                                                 height: 15,
@@ -694,17 +693,17 @@ class _MyHomePageState extends State<MyHomePage> {
                                         myController.text == "0.0") {
                                       print(
                                           "This is from the myController text = $myController.text");
-                                      myController2.text = "0.0";
-                                      // cost = 0;
+                                      myController2.text = "";
+
+                                      costText = "0.0";
                                       qtyText = "0.0";
                                       qtyBoxValue = 0;
-                                      // print(
-                                      //     "THIS IS THE LIVE VALUE FROM COST BOX = $cost");
+                                    } else {
+                                      qtyBoxValue = double.parse(text);
+                                      quantity = qtyBoxValue;
+                                      costCalculator();
                                     }
 
-                                    qtyBoxValue = double.parse(text);
-                                    quantity = qtyBoxValue;
-                                    costCalculator();
                                     print(
                                         "THIS IS THE LIVE VALUE FROM COST BOX = $myController2.text");
                                   });
@@ -757,19 +756,29 @@ class _MyHomePageState extends State<MyHomePage> {
                                     if (myController2.text == "0" ||
                                         myController2.text == "" ||
                                         myController2.text == "0.0") {
-                                      print(
-                                          "This is from the myController2 text = $myController2.text");
-                                      myController.text = "0.0";
+                                      // print(
+                                      //     "This is from the myController2 text = $myController2.text");
+                                      myController.text = "";
                                       // cost = 0;
+                                      costText = "0.0";
+                                      // qtyBoxValue =
+                                      //     0; //For not re-printing old value Do not delete.
+                                      costBoxValue = 0;
+                                    } else {
+                                      costBoxValue = double.parse(text);
+                                      cost = costBoxValue;
+                                      quantityCalculator();
                                       qtyBoxValue =
-                                          0; //For not re-printing old value Do not delete.
-                                      // costBoxValue = 0;
+                                          double.parse(myController.text);
                                     }
+
                                     // myController2=costText;
-                                    costBoxValue = double.parse(text);
-                                    cost = costBoxValue;
-                                    quantityCalculator();
+
+                                    print(
+                                        "\n\nCOST TEXT Value from onChange of MyCOntroller2 = $costText\n\n");
                                   });
+                                  print(
+                                      "myController2.text inte value (INSIDE 2ND TEXT FIELD) anu ithu = $myController2.text");
                                 },
                                 style:
                                     TextStyle(fontFamily: Fonts().fontRegular),
@@ -1000,7 +1009,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   child: AnimatedContainer(
                     // curve: Cubic(0.4, 0.0, 0.2, 1.0),
-                    curve: Curves.easeInOut,
+                    curve: Curves.bounceOut,
                     duration: Duration(seconds: 1),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
